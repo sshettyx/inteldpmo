@@ -1,2 +1,1 @@
-# inteldpmo
-dpmo_scripts
+Copy the scripts to home directory
