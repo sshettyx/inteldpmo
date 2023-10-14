@@ -2,6 +2,10 @@
 import os
 import sys
 
+if os.geteuid() != 0:
+    print("This script must be run as the root user.")
+    exit(1)
+
 def coldboot():
     try:
         print ("\nChecking the most recent COLDBOOT iteration.\n\n")
@@ -67,10 +71,43 @@ def s0ix_pmgraph():
     except:
         print(f"Unable to Read the directory")
 
+def S3():
+    try:
+        print ("\nChecking the most recent S3 iteration.\n\n")
+        os.system("ls -td /usr/local/stability_logs/S3_Logs_*/ | head -n 1 > /home/intel/count.txt")
+        with open("/home/intel/count.txt", "r") as file:
+            readline=file.read().splitlines()
+        readline = (readline[0])
+        global file_name
+        os.system(f"mkdir S3_logs && cp -rf {readline} S3_logs")
+        file_name = str(input("Enter the name for the zip file you want to create(Without extention): "))
+        os.system(f"zip -r {file_name}.zip S3_logs")
+
+        print ("\n\n")
+    except:
+        print(f"Unable to Read the directory")
+
+
+def S4():
+    try:
+        print ("\nChecking the most recent S4 iteration.\n\n")
+        os.system("ls -td /usr/local/stability_logs/S4_Logs_*/ | head -n 1 > /home/intel/count.txt")
+        with open("/home/intel/count.txt", "r") as file:
+            readline=file.read().splitlines()
+        readline = (readline[0])
+        global file_name
+        os.system(f"mkdir S4_logs && cp -rf {readline} S4_logs")
+        file_name = str(input("Enter the name for the zip file you want to create(Without extention): "))
+        os.system(f"zip -r {file_name}.zip S4_logs")
+
+        print ("\n\n")
+    except:
+        print(f"Unable to Read the directory")
+
 
 def main():
     
-    choice=str(input("\nPress 1 for Cold boot \nPress 2 for Warm boot \nPress 3 for s0ix(rtcwake) \nPress 4 for S0ix_pmgraph \nEnter the test you want to check the cycles number for:"))
+    choice=str(input("\nPress 1 for Cold boot \nPress 2 for Warm boot \nPress 3 for s0ix(rtcwake) \nPress 4 for S0ix_pmgraph \nPress 5 for S3 \nPress 6 for S4 \n Enter the test you want to collect the most recent logs for:"))
     if choice=='1':
         coldboot()
     elif choice=='2':
@@ -79,6 +116,10 @@ def main():
         s0ix()
     elif choice=='4':
         s0ix_pmgraph()
+    elif choice=='5':
+        S3()
+    elif choice=='6':
+        S4()
     else:
         print("Wrong Choice.Please Enter the valid Choice")
 
@@ -106,6 +147,6 @@ def dg():
 
 main()
 dg()
-os.system("rm -rf debug_logs log_dpmo coldboot_log warmboot_logs S0ix_logs S0ix_logs_pmgraph")
+os.system("rm -rf debug_logs log_dpmo coldboot_log warmboot_logs S0ix_logs S0ix_logs_pmgraph S3_logs S4_logs")
 
 
