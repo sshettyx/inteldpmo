@@ -1,3 +1,4 @@
+#Author: shashir s , Oct 2023
 #!/bin/bash
 # Check if the script is running as root
 if [[ $EUID -ne 0 ]]; then
